@@ -1,0 +1,1 @@
+INSERT INTO contato(nome, cpf) VALUES ('Alexa','123');
