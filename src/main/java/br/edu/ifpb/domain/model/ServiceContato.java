@@ -10,8 +10,8 @@ import java.util.List;
 public class ServiceContato {
     public Contatos dao = new ContatosJDBC();
     
-    public boolean salvar(Contato contato){
-        return dao.salvar(contato);
+    public void salvar(Contato contato){
+        dao.salvar(contato);
     }
     
     public List<Contato> todosOsContatos(){

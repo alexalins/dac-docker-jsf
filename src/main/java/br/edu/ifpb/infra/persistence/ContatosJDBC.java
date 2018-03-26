@@ -2,9 +2,6 @@ package br.edu.ifpb.infra.persistence;
 
 import br.edu.ifpb.domain.model.Contato;
 import br.edu.ifpb.domain.model.Contatos;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Connection;
 
 /**
  *
@@ -21,20 +19,19 @@ import java.util.logging.Logger;
  */
 public class ContatosJDBC implements Contatos {
 
-    private Conexao conexao;
-    private Contato contato;
+    private final Connection conexao;
 
     public ContatosJDBC() {
-        conexao = new Conexao();
+        this.conexao = Conexao.getConnection();
     }
 
     @Override
     public void excluir(Contato contatoParaExcluir) {
-        try {
-            String sql = "DELETE FROM contato WHERE cpf=?";
-            PreparedStatement statement = conexao.init().prepareStatement(sql);
-            statement.setString(1, contatoParaExcluir.getCpf());
-            statement.executeUpdate();
+       try {
+            String sql = "DELETE FROM contato WHERE CPF = ?";
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setString(1,contatoParaExcluir.getCpf());
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -43,69 +40,67 @@ public class ContatosJDBC implements Contatos {
     @Override
     public List<Contato> listarTodos() {
         try {
-            String consulta = "SELECT * FROM Album";
+            String sql = "SELECT * FROM contato";
 
-            PreparedStatement statement = conexao.init().prepareStatement(consulta);
-            return criarContato(statement);
+            Statement stmt = conexao.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
 
+            List<Contato> contatos = new ArrayList<>();
+            while (rs.next()) {
+                Contato c = new Contato();
+                c.setCpf(rs.getString("cpf"));
+                c.setNome(rs.getString("nome"));
+
+                contatos.add(c);
+            }
+            return contatos;
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return Collections.emptyList();
+        return Collections.EMPTY_LIST;
     }
 
     @Override
-    public boolean salvar(Contato contatoParaSalvar) {
-        boolean resultado = false;
-        String sql = "INSERT INTO contato (nome,cpf) VALUES(?,?)";
-        PreparedStatement statement = null;
+    public void salvar(Contato contatoParaSalvar) {
         try {
-            statement = conexao.init().prepareStatement(sql);
-
-            statement.setString(1, contatoParaSalvar.getNome());
-            statement.setString(2, contatoParaSalvar.getCpf());
-            if (statement.executeUpdate() > 0) {
-                resultado = true;
-            }
-
+            String sql = "INSERT INTO contato(nome, cpf) VALUES (?,?)";
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setString(1, contatoParaSalvar.getNome());
+            stmt.setString(2, contatoParaSalvar.getCpf());
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return resultado;
     }
 
     @Override
     public Contato localizarPor(String nome) {
-        StringBuffer consulta = new StringBuffer("SELECT * FROM contato WHERE nome=?");
-
-        System.err.println(consulta.toString());
-
-        PreparedStatement statement = null;
         try {
-            statement = conexao.init().prepareStatement(consulta.toString());
-            statement.setString(1, nome);
-        } catch (SQLException ex) {
-            Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            return criarContato(statement).get(0);
+            String sql = "SELECT * FROM contato WHERE nome = " + nome;
+            Statement stmt = conexao.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            Contato c = new Contato();
+            while (rs.next()) {
+                c.setCpf(rs.getString("cpf"));
+                c.setNome(rs.getString("nome"));
+            }
+            return c;
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
-
-    private List<Contato> criarContato(PreparedStatement statement) throws SQLException {
-        List<Contato> contatos = new ArrayList<>();
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            Contato contato = new Contato(
-                    resultSet.getString("nome"),
-                    resultSet.getString("cpf")
-            );
-            contatos.add(contato);
+    
+    @Override
+    public void editar(Contato contatoParaEditar){
+    try {
+            String sql = "UPDATE FROM contato SET NOME = ?, CPF = ?";
+            PreparedStatement stmt = conexao.prepareStatement(sql);
+            stmt.setString(1,contatoParaEditar.getNome());
+            stmt.setString(1,contatoParaEditar.getCpf());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return contatos;
     }
 }

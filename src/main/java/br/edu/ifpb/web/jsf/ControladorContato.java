@@ -15,7 +15,7 @@ import javax.inject.Named;
 public class ControladorContato {
     
     private Contato contato = new Contato();
-    private ServiceContato service =  new ServiceContato();
+    private final ServiceContato service =  new ServiceContato();
     
     public String salvar(Contato contato) {
         this.service.salvar(contato);
@@ -35,7 +35,8 @@ public class ControladorContato {
         this.contato = contato;
     }
 
-    public List<Contato> todoOsContatos() {
+    public List<Contato> todosOsContatos() {
         return this.service.todosOsContatos();
     }    
+
 }

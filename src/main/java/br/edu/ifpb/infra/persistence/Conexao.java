@@ -3,28 +3,25 @@ package br.edu.ifpb.infra.persistence;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.enterprise.inject.Produces;
 
 /**
  *
  * @author alexalins
  */
 public class Conexao {
-     private Connection connection;
+    private static final String URL = "jdbc://postgresql:host-database:5432/dac-jsf";
+    private static final String USER = "postgres";
+    private static final String PASSWORD = "123";
 
-    public Connection init() {
+    @Produces
+    public static Connection getConnection() {
+        Connection connection = null;
         try {
-            Class.forName("org.postgresql.Driver");
-            return connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/dac-docker-jsf", "postgres", "123");
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Conexao.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println();
         }
-        return null;
-    }
-    public  static void fecharConexao(Connection c) throws SQLException{
-        c.close();
+        return connection;
     }
 }

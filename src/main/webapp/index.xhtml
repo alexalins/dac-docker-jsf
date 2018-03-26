@@ -8,25 +8,14 @@
     </h:head>
     <h:body>
         <h1>Contatos</h1>
-        <h:dataTable value="#{controladorContato.todoOsContatos()}" var="Contatos">
-            <h:column>
-                <f:facet name="header">Nome</f:facet>
-                    #{Contatos.nome}
-            </h:column>
-            <h:column>
-                <f:facet name="header">CPF</f:facet>
-                    #{Contatos.cpf}
-            </h:column>
-            <h:column>
-                <f:facet name="header">Ações</f:facet>
-                <h:form>
-                    <h:commandButton value="Excluir" 
-                                     action="#{controladorContato.excluir(contatoParaExcluir)}" />
-                </h:form>
-            </h:column>
-        </h:dataTable>
+       
+        <br></br>
         <h:form>
-            <h:commandButton value="Adicionar" action="#{controladorPages.adicionar()}"></h:commandButton>
+             <h:outputLabel for="nome" value="Nome: "/>
+            <h:inputText id="nome" value="#{controladorContato.contato.nome}" />
+            <h:outputLabel for="cpf" value="CPF: "/>
+            <h:inputText id="cpf" value="#{controladorContato.contato.cpf}" />
+            <h:commandButton value="Adicionar" action="#{controladorContato.salvar(contato)}"></h:commandButton>
         </h:form>
     </h:body>
 </html>
