@@ -43,7 +43,7 @@ public class ContatosJDBC implements Contatos {
     @Override
     public List<Contato> listarTodos() {
         try {
-            String consulta = "SELECT * FROM Album";
+            String consulta = "SELECT * FROM contato";
 
             PreparedStatement statement = conexao.init().prepareStatement(consulta);
             return criarContato(statement);
@@ -76,13 +76,12 @@ public class ContatosJDBC implements Contatos {
 
     @Override
     public Contato localizarPor(String nome) {
-        StringBuffer consulta = new StringBuffer("SELECT * FROM contato WHERE nome=?");
+        String consulta = "SELECT * FROM contato WHERE nome=?";
 
-        System.err.println(consulta.toString());
 
         PreparedStatement statement = null;
         try {
-            statement = conexao.init().prepareStatement(consulta.toString());
+            statement = conexao.init().prepareStatement(consulta);
             statement.setString(1, nome);
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
@@ -99,11 +98,11 @@ public class ContatosJDBC implements Contatos {
         List<Contato> contatos = new ArrayList<>();
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
-            Contato contato = new Contato(
+            Contato c = new Contato(
                     resultSet.getString("nome"),
                     resultSet.getString("cpf")
             );
-            contatos.add(contato);
+            contatos.add(c);
         }
 
         return contatos;
