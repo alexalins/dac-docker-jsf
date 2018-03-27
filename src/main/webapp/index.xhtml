@@ -15,7 +15,7 @@
             <h:inputText id="nome" value="#{controladorContato.contato.nome}" />
             <h:outputLabel for="cpf" value="CPF: "/>
             <h:inputText id="cpf" value="#{controladorContato.contato.cpf}" />
-            <h:commandButton value="Adicionar" action="#{controladorContato.salvar(contato)}"></h:commandButton>
+            <h:commandButton value="Adicionar" action="#{controladorContato.salvar()}"></h:commandButton>
         </h:form>
         
         <h1>Contatos Cadastrados</h1>
@@ -31,8 +31,10 @@
             <h:column>
                 <f:facet name="header">Ações</f:facet>
                 <h:form>
+                    <h:commandButton value="Editar" 
+                                     action="#{controladorContato.editar()}"></h:commandButton>
                     <h:commandButton value="Excluir" 
-                                     action="#{controladorContato.excluir(contatoParaExcluir)}"></h:commandButton>
+                                     action="#{controladorContato.excluir()}"></h:commandButton>
                 </h:form>
             </h:column>
         </h:dataTable>

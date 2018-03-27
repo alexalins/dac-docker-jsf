@@ -6,7 +6,7 @@ import java.util.List;
  *
  * @author alexalins
  */
-public interface Contatos {
+public interface ContatosDao {
     public void excluir(Contato contatoParaExcluir);
 
     public List<Contato> listarTodos();

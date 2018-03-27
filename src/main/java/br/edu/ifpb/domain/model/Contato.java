@@ -7,7 +7,7 @@ import java.util.Objects;
  * @author alexalins
  */
 public class Contato {
-    private int id;
+
     private String nome;
     private String cpf;
 
@@ -17,20 +17,6 @@ public class Contato {
     public Contato(String nome, String cpf) {
         this.nome = nome;
         this.cpf = cpf;
-    }
-
-    public Contato(int id, String nome, String cpf) {
-        this.id = id;
-        this.nome = nome;
-        this.cpf = cpf;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -50,16 +36,10 @@ public class Contato {
     }
 
     @Override
-    public String toString() {
-        return "Contato{" + "id=" + id + ", nome=" + nome + ", cpf=" + cpf + '}';
-    }
-
-    @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 17 * hash + this.id;
-        hash = 17 * hash + Objects.hashCode(this.nome);
-        hash = 17 * hash + Objects.hashCode(this.cpf);
+        int hash = 5;
+        hash = 53 * hash + Objects.hashCode(this.nome);
+        hash = 53 * hash + Objects.hashCode(this.cpf);
         return hash;
     }
 
@@ -75,9 +55,6 @@ public class Contato {
             return false;
         }
         final Contato other = (Contato) obj;
-        if (this.id != other.id) {
-            return false;
-        }
         if (!Objects.equals(this.nome, other.nome)) {
             return false;
         }
@@ -86,6 +63,10 @@ public class Contato {
         }
         return true;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Contato{" + "nome=" + nome + ", cpf=" + cpf + '}';
+    }
+
 }
