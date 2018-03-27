@@ -11,7 +11,9 @@ public interface Contatos {
 
     public List<Contato> listarTodos();
 
-    public boolean salvar(Contato contatoParaSalvar);
+    public void salvar(Contato contatoParaSalvar);
 
     public Contato localizarPor(String nome);
+    
+    public void editar(Contato contatoParaEditar);
 }

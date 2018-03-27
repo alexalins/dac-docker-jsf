@@ -2,9 +2,6 @@ package br.edu.ifpb.infra.persistence;
 
 import br.edu.ifpb.domain.model.Contato;
 import br.edu.ifpb.domain.model.Contatos;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,8 +18,7 @@ import java.util.logging.Logger;
  */
 public class ContatosJDBC implements Contatos {
 
-    private Conexao conexao;
-    private Contato contato;
+    private final Conexao conexao;
 
     public ContatosJDBC() {
         conexao = new Conexao();
@@ -30,11 +26,11 @@ public class ContatosJDBC implements Contatos {
 
     @Override
     public void excluir(Contato contatoParaExcluir) {
-        try {
-            String sql = "DELETE FROM contato WHERE cpf=?";
-            PreparedStatement statement = conexao.init().prepareStatement(sql);
-            statement.setString(1, contatoParaExcluir.getCpf());
-            statement.executeUpdate();
+       try {
+            String sql = "DELETE FROM contato WHERE CPF = ?";
+            PreparedStatement stmt = conexao.init().prepareStatement(sql);
+            stmt.setString(1,contatoParaExcluir.getCpf());
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -42,12 +38,12 @@ public class ContatosJDBC implements Contatos {
 
     @Override
     public List<Contato> listarTodos() {
+        PreparedStatement stmt = null;
         try {
-            String consulta = "SELECT * FROM contato";
-
-            PreparedStatement statement = conexao.init().prepareStatement(consulta);
-            return criarContato(statement);
-
+            String sql = "SELECT * FROM contato";
+            stmt = conexao.init().prepareStatement(sql);
+            return criarContato(stmt);
+            
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -55,23 +51,18 @@ public class ContatosJDBC implements Contatos {
     }
 
     @Override
-    public boolean salvar(Contato contatoParaSalvar) {
-        boolean resultado = false;
-        String sql = "INSERT INTO contato (nome,cpf) VALUES(?,?)";
-        PreparedStatement statement = null;
+    public void salvar(Contato contatoParaSalvar) {
+        String sql = "INSERT INTO contato(nome, cpf) VALUES (?,?)";
+         PreparedStatement stmt = null;
         try {
-            statement = conexao.init().prepareStatement(sql);
+            stmt = conexao.init().prepareStatement(sql);
 
-            statement.setString(1, contatoParaSalvar.getNome());
-            statement.setString(2, contatoParaSalvar.getCpf());
-            if (statement.executeUpdate() > 0) {
-                resultado = true;
-            }
-
+            stmt.setString(1, contatoParaSalvar.getNome());
+            stmt.setString(2, contatoParaSalvar.getCpf());
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return resultado;
     }
 
     @Override
@@ -79,15 +70,15 @@ public class ContatosJDBC implements Contatos {
         String consulta = "SELECT * FROM contato WHERE nome=?";
 
 
-        PreparedStatement statement = null;
+        PreparedStatement stmt = null;
         try {
-            statement = conexao.init().prepareStatement(consulta);
-            statement.setString(1, nome);
+            stmt = conexao.init().prepareStatement(consulta);
+            stmt.setString(1, nome);
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            return criarContato(statement).get(0);
+            return criarContato(stmt).get(0);
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -104,7 +95,20 @@ public class ContatosJDBC implements Contatos {
             );
             contatos.add(c);
         }
-
+        
         return contatos;
+    }
+    
+    @Override
+    public void editar(Contato contatoParaEditar){
+    try {
+            String sql = "UPDATE FROM contato SET NOME = ?, CPF = ?";
+            PreparedStatement stmt = conexao.init().prepareStatement(sql);
+            stmt.setString(1,contatoParaEditar.getNome());
+            stmt.setString(1,contatoParaEditar.getCpf());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
