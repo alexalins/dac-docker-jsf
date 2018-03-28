@@ -12,8 +12,6 @@ public interface ContatosDao {
     public List<Contato> listarTodos();
 
     public void salvar(Contato contatoParaSalvar);
-
-    public Contato localizarPor(String nome);
     
     public void editar(Contato contatoParaEditar);
 }

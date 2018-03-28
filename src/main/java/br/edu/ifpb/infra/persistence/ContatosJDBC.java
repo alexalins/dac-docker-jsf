@@ -70,26 +70,6 @@ public class ContatosJDBC implements ContatosDao {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    @Override
-    public Contato localizarPor(String nome) {
-        String consulta = "SELECT * FROM contato WHERE nome=?";
-
-        PreparedStatement stmt = null;
-        try {
-            stmt = conexao.init().prepareStatement(consulta);
-            stmt.setString(1, nome);
-        } catch (SQLException ex) {
-            Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            return criarContato(stmt).get(0);
-        } catch (SQLException ex) {
-            Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
     private List<Contato> criarContato(PreparedStatement statement) throws SQLException {
         List<Contato> contatos = new ArrayList<>();
         ResultSet resultSet = statement.executeQuery();
