@@ -14,11 +14,10 @@ import javax.inject.Named;
  *
  * @author alexalins
  */
-
 @Named
 @RequestScoped
-public class ControladorContato{
-    
+public class ControladorContato {
+
     private Contato contato = new Contato();
     private final ContatosDao dao = new ContatosJDBC();
     private List<Contato> contatos = new ArrayList<>();
@@ -29,7 +28,7 @@ public class ControladorContato{
     }
 
     public void salvar() {
-        if (contato.getId() != 0){
+        if (contato.getId() != 0) {
             dao.editar(contato);
         } else {
             dao.salvar(contato);
@@ -50,17 +49,20 @@ public class ControladorContato{
     }
 
     public List<Contato> todosOsContatos() {
-        return dao.listarTodos();
+        if (contatos.isEmpty()) {
+            return dao.listarTodos();
+        }
+        return contatos;
     }
 
-    public void BuscarFilter(AjaxBehaviorEvent evento){
+    public void BuscarFilter(AjaxBehaviorEvent evento) {
         this.contatos = contatos.stream()
                 .filter(c -> c.getNome()
                 .toLowerCase()
                 .startsWith(buscar.toLowerCase()))
                 .collect(Collectors.toList());
     }
-    
+
     private void limparCampos() {
         contato.setId(0);
         contato.setNome("");

@@ -25,15 +25,12 @@
             <div>
                 <h:outputLabel for="buscar" value="Buscar"/>
                 <h:inputText id="buscar" value="#{controladorContato.buscar}">
-                    <f:ajax event="keyup" listener="#{controladorContato.BuscarFilter}" render="table" delay="1" />
+                    <f:ajax event="keyup" listener="#{controladorContato.BuscarFilter}" render="table"  />
                 </h:inputText>
                 <label for="Buscar"></label>
             </div><br/>
         </h:form>
-        <h:dataTable value="#{controladorContato.todosOsContatos()}" var="contato">
-            <h:column>
-                <strong><h:outputText value="#{contato.nome.toUpperCase().charAt(0)}"></h:outputText></strong>
-            </h:column>
+        <h:dataTable id="table" value="#{controladorContato.todosOsContatos()}" var="contato">
             <h:column>
                 <f:facet name="header">ID:</f:facet>
                     #{contato.id}
