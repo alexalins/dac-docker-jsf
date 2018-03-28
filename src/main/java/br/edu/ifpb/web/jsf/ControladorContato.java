@@ -14,17 +14,22 @@ import javax.inject.Named;
  */
 @Named
 @RequestScoped
-public class ControladorContato implements Serializable{
-    
+public class ControladorContato implements Serializable {
+
     private Contato contato = new Contato();
-    private ContatosDao dao =  new ContatosJDBC();
-    
+    private final ContatosDao dao = new ContatosJDBC();
+
     public void salvar() {
-       dao.salvar(contato);
+        if (contato.getId() != 0){
+            dao.editar(contato);
+        } else {
+            dao.salvar(contato);
+        }
+        limparCampos();
     }
 
-    public void excluir() {
-        dao.excluir(contato);
+    public void excluir(Contato ContatoParaExcluir) {
+        dao.excluir(ContatoParaExcluir);
     }
 
     public Contato getContato() {
@@ -37,9 +42,15 @@ public class ControladorContato implements Serializable{
 
     public List<Contato> todosOsContatos() {
         return dao.listarTodos();
-    }    
+    }
     
-    public void editar(){
-        dao.editar(contato);
+    public Contato localizar(String nome){
+        return dao.localizarPor(nome);
+    }
+    
+    private void limparCampos() {
+        contato.setId(0);
+        contato.setNome("");
+        contato.setCpf("");
     }
 }

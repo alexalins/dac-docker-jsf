@@ -5,21 +5,29 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Docker-JSF</title>
+        <link rel="stylesheet" type="text/css" href="css/materialize.min.css"/>
     </h:head>
     <h:body>
-        <h1>Adicionar Contatos</h1>
-       
+        <h3 align="center">Adicionar Contatos</h3>
         <br></br>
         <h:form>
+            <h:inputHidden id="id" value="#{controladorContato.contato.id}" />
             <h:outputLabel for="nome" value="Nome: "/>
             <h:inputText id="nome" value="#{controladorContato.contato.nome}" />
             <h:outputLabel for="cpf" value="CPF: "/>
             <h:inputText id="cpf" value="#{controladorContato.contato.cpf}" />
-            <h:commandButton value="Adicionar" action="#{controladorContato.salvar()}"></h:commandButton>
+            <div align="right">
+                <h:commandButton class="waves-effect waves-light btn"  value="Salvar" action="#{controladorContato.salvar()}"></h:commandButton>
+
+            </div>
         </h:form>
-        
-        <h1>Contatos Cadastrados</h1>
+
+        <h3 align="center">Contatos Cadastrados</h3>
         <h:dataTable value="#{controladorContato.todosOsContatos()}" var="contato">
+            <h:column>
+                <f:facet name="header">ID:</f:facet>
+                    #{contato.id}
+            </h:column>
             <h:column>
                 <f:facet name="header">Nome:</f:facet>
                     #{contato.nome}
@@ -29,12 +37,15 @@
                     #{contato.cpf}
             </h:column>
             <h:column>
-                <f:facet name="header">Ações</f:facet>
+                <f:facet name="header">Editar</f:facet>
                 <h:form>
-                    <h:commandButton value="Editar" 
-                                     action="#{controladorContato.editar()}"></h:commandButton>
-                    <h:commandButton value="Excluir" 
-                                     action="#{controladorContato.excluir()}"></h:commandButton>
+                    <h:commandButton class="waves-effect waves-light btn" value="Editar" action="#{controladorContato.setContato(contato)}"></h:commandButton>
+                </h:form>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Excluir</f:facet>
+                <h:form>
+                    <h:commandButton class="waves-effect waves-light btn" value="Excluir" action="#{controladorContato.excluir(contato)}"></h:commandButton>
                 </h:form>
             </h:column>
         </h:dataTable>

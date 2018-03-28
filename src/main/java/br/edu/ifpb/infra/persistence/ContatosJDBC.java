@@ -27,9 +27,9 @@ public class ContatosJDBC implements ContatosDao {
     public void excluir(Contato contatoParaExcluir) {
         PreparedStatement stmt = null;
         try {
-            String sql = "DELETE FROM contato WHERE CPF = ?";
+            String sql = "DELETE FROM contato WHERE id = ?";
             stmt = conexao.init().prepareStatement(sql);
-            stmt.setString(1, contatoParaExcluir.getCpf());
+            stmt.setInt(1, contatoParaExcluir.getId());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,13 +40,17 @@ public class ContatosJDBC implements ContatosDao {
     public List<Contato> listarTodos() {
         PreparedStatement stmt = null;
         try {
-            String sql = "SELECT * FROM contato";
+            String sql = "SELECT * FROM contato order by nome asc";
             stmt = conexao.init().prepareStatement(sql);
-            return criarContato(stmt);
-
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
         }
+        try {
+            return criarContato(stmt);
+        } catch (SQLException ex) {
+            Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return Collections.emptyList();
     }
 
@@ -91,6 +95,7 @@ public class ContatosJDBC implements ContatosDao {
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
             Contato c = new Contato(
+                    resultSet.getInt("id"),
                     resultSet.getString("nome"),
                     resultSet.getString("cpf")
             );
@@ -103,10 +108,11 @@ public class ContatosJDBC implements ContatosDao {
     @Override
     public void editar(Contato contatoParaEditar) {
         try {
-            String sql = "UPDATE FROM contato SET NOME = ?, CPF = ?";
+            String sql = "UPDATE contato SET nome = ?, cpf = ? WHERE id = ?";
             PreparedStatement stmt = conexao.init().prepareStatement(sql);
             stmt.setString(1, contatoParaEditar.getNome());
             stmt.setString(2, contatoParaEditar.getCpf());
+            stmt.setInt(3, contatoParaEditar.getId());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(ContatosJDBC.class.getName()).log(Level.SEVERE, null, ex);
